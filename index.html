@@ -146,7 +146,9 @@
                 },
             };
 
-            let currentLang = localStorage.lang || "es";
+            let currentLang =
+                localStorage.lang ||
+                (navigator.language.startsWith("es") ? "es" : "en");
 
             function toggleLanguage() {
                 currentLang = currentLang === "es" ? "en" : "es";

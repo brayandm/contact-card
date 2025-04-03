@@ -10,10 +10,15 @@
                 darkMode: "class",
             };
         </script>
-
         <script>
-            if (localStorage.theme === "dark") {
+            if (
+                localStorage.theme === "dark" ||
+                (!("theme" in localStorage) &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ) {
                 document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
             }
         </script>
     </head>
@@ -24,9 +29,18 @@
         <div class="absolute top-4 right-4">
             <button
                 onclick="toggleDarkMode()"
-                class="px-4 py-2 text-sm font-medium bg-gray-800 text-white rounded hover:bg-gray-700 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 transition"
+                class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white transition"
+                id="theme-toggle"
             >
-                🌙 Toggle Dark
+                <svg
+                    id="theme-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                ></svg>
             </button>
         </div>
 
@@ -85,13 +99,25 @@
         </div>
 
         <script>
+            const sun = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M4.219 4.219l1.061 1.061M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.219 19.781l1.061-1.061M18.72 5.28l1.06-1.06M12 6.75a5.25 5.25 0 100 10.5 5.25 5.25 0 000-10.5z" />`;
+            const moon = `<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />`;
+
+            const icon = document.getElementById("theme-icon");
+            const html = document.documentElement;
+
+            function setIcon() {
+                icon.innerHTML = html.classList.contains("dark") ? sun : moon;
+            }
+
             function toggleDarkMode() {
-                const html = document.documentElement;
                 html.classList.toggle("dark");
                 localStorage.theme = html.classList.contains("dark")
                     ? "dark"
                     : "light";
+                setIcon();
             }
+
+            setIcon();
         </script>
     </body>
 </html>
